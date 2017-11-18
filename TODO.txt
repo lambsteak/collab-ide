@@ -1,16 +1,8 @@
-- Make the xml request handling secure (use session tokens or something) ==> csrf token mostly solves it (?)
-- Add viewing permission to discussion board channels to allow for private channels, or segregated read/write access etc.
+- Make the xml request handling more secure (use session tokens etc)
+- complete the dashboard form
 - In the dashboard make the project names be hyperlinks to the workspace pages
-- repo, notification board, first user and second user code view(save and fetch functionality)
-- responsiveness in the website, at least for different PC resolutions
-- option to choose the second user for editor display from a list of project members and selecting the respective member id and sending it
--- OPTIONAL (long-term):
+- responsiveness in the website for different desktop resolutions and perhaps phones
 - options to start voice conferencing, screen casting etc
 - multiple editor tab functionality
 - option to virtually run the code and show the output or the run in a new window/large dialog box kinda thing
-
-
-
-
-- choose a file of another person to view
 - send comments on a file of another person

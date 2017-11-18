@@ -24,7 +24,7 @@ def update_state(request, project_id):
             exclude(owner__id=data['member_id']).filter(
             name=name, location=data['location'])
         while dups:
-            name = name + '*n'
+            name = name + '*'
             dups = FileEntity.objects.filter(project__id=project_id).\
                 exclude(owner__id=data['member_id']).filter(
                 name=name, location=data['location'])
@@ -49,7 +49,7 @@ def update_state(request, project_id):
             name=name, location=loc)
         while dups:
             is_dup = True
-            name = name + '#'
+            name = name + '*'
             dups = FileEntity.objects.filter(project__id=project_id).\
                 exclude(owner__id=data['member_id']).filter(
                 name=name, location=loc)

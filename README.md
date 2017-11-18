@@ -21,4 +21,4 @@ Here's a screenshot:
 ![workspace screenshot](screenshot.png "collab-ide workspace screenshot")
 
 The project is a normal Django application and can be tested locally by cd-ing into the project repo and running `python manage.py runserver` assuming Django is installed (look into *CONTRIBUTING.md* for more details about setting up the project).
-#### A live instance of this project will be up soon.
+### A live instance of this project is running at <http://lambsteaklab.pythonanywhere.com>
