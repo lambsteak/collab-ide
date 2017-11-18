@@ -79,6 +79,8 @@ def new_project(member, request):
     for memb in members:
         username = memb.strip()
         if SiteUser.objects.filter(username=username):
+            if member.username == username:
+                continue
             membs.append(SiteUser.objects.get(username=username))
         else:
             return HttpResponse('The given user does not exist')
