@@ -1,0 +1,68 @@
+{% extends "ide/base_form_display.html" %}
+{% block title %}Collaborative IDE | Dashboard{% endblock %}
+{% block style %}
+.stats {
+    width: 30%;
+    float: left;
+    border: 2px solid blue;
+}
+{% endblock %}
+{% block form_style %}
+.generic_form {
+            //position: relative;
+            margin-top: 10px;
+            margin-left: 10px;
+            float: left;
+            //margin-bottom: 30px;
+            width: 30%;
+            padding: 20px;
+            background-color: white;
+            border: 2px solid black;
+
+        }
+{% endblock %}
+{% block pre_form %}
+<div class="stats">
+    <h3>Projects where serving as Admin</h3>
+    <ul>
+        {% for proj in member.admins.all %}
+        <li>Project Name: {{ proj.name }} <br />
+            Token: {{ proj.token }} <br />
+            Contributors: <br />
+            <ul>{% for contrib in proj.users.all %}
+                <li>{{ contrib.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+    <h3>Other Projects Contributing in</h3>
+    <ul>
+        {% for proj in member.project_set.all %}
+        <li>Project Name: {{ proj.name }}<br />
+            Admin: {{ proj.admin.name }}<br />
+            Contributors: <br />
+            <ul>
+                {% for contrib in proj.get_users_names %}
+                <li>
+                    {{ contrib }}
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+{% block dashboard %}<a href="/">Home</a>{% endblock %}
+{% block generic_form %}
+<form action="/dashboard/" method="POST"> {% csrf_token %}
+    <input type="password" name="pr_password" placeholder="Enter current password"><br />
+    <input type="password" name="password" placeholder="Change login password"><br />
+    <input type="password" name="password2" placeholder="Confirm password"><br />
+    <input type="text" name="name" placeholder="Change name"><br />
+    <input type="text" name="token" placeholder="Change tokens"><br />
+    <textarea name="remove_member" placeholder="Remove members"></textarea><br />
+    <input type="submit" value="Update">
+</form>
+{% endblock %}

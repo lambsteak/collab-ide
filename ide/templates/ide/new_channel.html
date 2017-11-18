@@ -1,0 +1,12 @@
+{% extends "ide/base_form_display.html" %}
+{% block title %}Collaborative IDE | Add New Channel{% endblock %}
+{% block dashboard %}<a href="/">Home</a> <a href="/dashboard/">Dashboard</a>{% endblock %}
+{% block generic_form %}
+    <form action="/new_channel/{{ project.id }}/" method="POST">
+        {% csrf_token %}
+        <h2>Add New Channel in Project: {{ project.name }}</h2>
+        <input type="text" name="channel_name" placeholder="Enter channel name" maxlength="8" required /><br />
+        <input type="text" name="channel_members" placeholder="Enter channel members" maxlength="200" required /><br />
+        <input type="submit" value="Create Channel">
+    </form>
+{% endblock %}

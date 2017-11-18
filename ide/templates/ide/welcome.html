@@ -1,0 +1,21 @@
+{% extends "ide/base_form_display.html" %}
+    {% block title %}Collaborative IDE: Welcome {{ member.name }}{% endblock %}
+{% block generic_form %}
+    <form method="POST" action="/new_project/">
+        {% csrf_token %}
+        <h1>Start A Project</h1>
+        <input type="text" name="name" placeholder="Project Name" required /><br />
+        <textarea name="project_members" placeholder="Enter project members separated by semicolons" required /></textarea><br />
+        <input type="text" name="token" placeholder="Enter authorization token" required /><br />
+        <input type="submit" value="Create">
+    </form>
+    <br /><br />
+    <form action="/join_project/" method="POST">
+        {% csrf_token %}
+        <h1>Join A Project</h1>
+        <input type="text" name="name" placeholder="Enter project name" required /><br />
+        <input type="text" name="token" placeholder="Enter project token" required /> <br />
+        <input type="submit" value="Join">
+    </form>
+{% endblock %}
+{% block dashboard %}<a href="/dashboard/">Dashboard</a>{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "ide/base_form_display.html" %}
+{% block title %}Collaborative IDE: Log In or Sign Up{% endblock %}
+{% block user_menu %}{% endblock %}
+{% block generic_form %}
+<h2>Log In</h2>
+            <form action="/login/" method="POST">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Email address" required />
+                <br />
+                <input type="password" name="password" placeholder="Enter password" required />
+                <br />
+                <input type="submit" value="Log In">
+            </form>
+            <br />
+            <h2>Sign Up</h2>
+            <form action="/signup/" method="POST">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Enter your name" required />
+                <input type="email" name="email" placeholder="Enter your email" required />
+                <br />
+                <input type="text" name="username" placeholder="Enter a username" required />
+                <br />
+                <input type="password" name="password" placeholder="Enter a password" required />
+                <br />
+                <input type="submit" value="Sign Up">
+            </form>
+{% endblock %}

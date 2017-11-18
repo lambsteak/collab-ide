@@ -1,0 +1,746 @@
+{% load staticfiles %}
+<html lang="en">
+    <head>
+        <title> Workspace: {{ project.name }} </title>
+        <style type="text/css" media="screen">
+          /*  #editor {
+                position: absolute;
+                top: 270px;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                width: 70%;
+                height: 60%;
+            }
+            */
+            .page {
+			background-color: white;
+            }
+            .user_info {
+                float: left;
+                clear: left;
+                /*width: 20%;
+                height: 100%;*/
+                width: 100%;
+                //border: 2px solid blue;
+                margin-bottom: 1%;
+            }
+            .user_space {
+                float: left;
+                display: block;
+                height: 80vh;
+                width: 35%;
+                border: 2px outset gray;
+                margin: 0.8%;
+            }
+            .user_editor {
+                overflow: scroll;
+                margin-bottom: 2%;
+                height: 100%;
+            }
+            .notif_board {
+                display: block;
+                float: right;
+                width: 21%;
+                height: 35vh;
+                border: 2px outset gray;
+                overflow-y: scroll;
+                margin: 0.6%;
+                margin-top: 1%;
+                margin-bottom: 0;
+            }
+            .ide_menu {
+                float:left;
+                width: 10%;
+                height: 35vh;
+                margin-top: 1%;
+                margin-left: 0.05%;
+                margin-right: 0.4%;
+                border: 2px solid black;
+                overflow: hidden;
+            }
+            .second_user {
+                display: block;
+                clear: right;
+                float: right;
+                width: 30%;
+                height: 50vh;
+                border: 1.5px outset black;
+                overflow: scroll;
+                margin: 0.7%;
+                //margin-top: 0;
+            }
+            .discussion_board {
+                display: block;
+                float: left;
+                width: 29%;
+                height: 50vh;
+                border: 2px outset gray;
+                //overflow-y: scroll;
+                margin: 0.7%;
+                margin-left: 0.3%;
+            }
+            .main_repo {
+                display: block;
+                float: right;
+                width: 28%;
+                height: 35vh;
+                border: 2px solid blue;
+                overflow: scroll;
+                margin: 0.8%;
+                margin-top: 1%;
+                margin-left: 0.3%;
+            }
+            .editor_meta_btn {
+                float: right;
+                background-color: green;
+                color: white;
+                padding: 5px;
+                border-radius: 8px;
+                margin-bottom: 0.5%;
+                margin-right: 2%;
+                font-size: 95%;
+                cursor: pointer;
+            }
+            .disc_channels {
+                background-color: lightgray;
+                padding: 0;
+                //opacity: 0.8;
+                width: 27%;
+                float: left;
+                border-right: 1px solid darkgreen;
+                margin: 0;
+                height: 100%;
+
+            }
+            ul.disc_channel_list {
+                list-style-type: none;
+
+                margin-left: 0.5%;
+                padding: 0;
+                overflow: hidden;
+                //background-color: black;
+
+                position: fixed;
+            }
+            ul.disc_channel_list li {
+                font-size: 95%;
+                padding: 3%;
+                margin: 10%;
+                margin-right: 0px;
+                text-align: center;
+                display: block;
+                background-color: darkblue;
+                color: white;
+                border-radius: 7px;
+                cursor: pointer;
+            }
+            .disc_chats_space {
+                margin: 0;
+                width: 70%;
+                height: 100%;
+                padding-left: 5px;
+                float: left;
+                background-color: lightyellow;
+                //overflow: scroll;
+            }
+            #disc_user_input {
+                //border: 1px solid blue;
+                width: 98%;
+                overflow: hidden;
+            }
+            #disc_user_text {
+                float: left;
+                width:76%;
+                font-size: 100%;
+                font-family: sans-serif;
+            }
+            #disc_send_message {
+                float: left;
+                width: 18%;
+                margin-top: 4%;
+                margin-left: 2%;
+            }
+            #disc_messages {
+                height: 81.5%;
+                overflow: scroll;
+                margin-bottom: 2.1%;
+            }
+            /*
+            #b1 {
+                //float: left;
+                display: block;
+                text-decoration: none;
+                color: white;
+                width: auto;
+                padding: 5px;
+                background-color: green;
+                border: 2px inset white;
+                border-radius: 8px;
+            }
+            */
+            .editor_meta_btn:hover {
+             box-shadow: 0 6px 4px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            }
+            #editor_lang_menu {
+                float: right;
+                font-size: 90%;
+
+            }
+            .active_channel {
+                background-color: black;
+                color: white;
+            }
+            textarea#second_user {
+             height: 100%;
+             width: 100%;
+             -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+             -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+             box-sizing: border-box;         /* Opera/IE 8+ */
+
+            }
+
+            .headrow {
+                font-weight: bold;
+            }
+
+            .user_comment_submit button {
+                float: right;
+                width: 27%;
+                background-color: blue;
+                color: white;
+                padding: 1%;
+                border-radius: 8px;
+                margin-right: 2%;
+                cursor: pointer;
+            }
+
+            #second_infos {
+                float: left;
+                width: 60%;
+            }
+
+            #fileinfodiv {
+                float: left;
+                width: 20%;
+            }
+        </style>
+    </head>
+    <body class="page">
+        <div class="user_space">
+            <div id = "editor" class="user_editor"></div>
+            <div>
+                <script src="{% static 'src/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+                <script>
+                    var mode = "";
+                    var st= "ace/mode/";
+                    function mode_select()
+                    {
+                        var e = document.getElementById("lang");
+                        l = e.value;
+                        if(l == "c_cpp")
+                        {
+                            mode = st + "c_cpp";
+                        }
+                        if(l == "java")
+                        {
+                            mode = st + "java";
+                        }
+                        if(l == "javascript")
+                        {
+                            mode = st + "javascript";
+                        }
+                        if(l == "html")
+                        {
+                            mode = st + "html";
+                        }
+                        if(l == "python")
+                        {
+                            mode = st + "python";
+                        }
+                        editor.getSession().setMode(mode);
+                    }
+                    var editor = ace.edit("editor");
+                    editor.setTheme("ace/theme/iplastic");
+                    editor.getSession().setMode(mode);
+                    document.getElementById('editor').style.fontSize='16px';
+
+
+                    var xmlhttp = {}
+                    info_filename = null
+                    info_location = null
+                    info_fileid = null
+                    info_repo = null
+                    saved = false
+                    default_filename = ''
+                    default_location = ''
+
+                    xmlhttp.send_state = function() {
+                        if (!saved) {
+                            return
+                        }
+                        var request = new XMLHttpRequest()
+                        request.open(
+                            'POST', '/api/update_state/'+{{ project.id }}+'/', true)
+                        request.setRequestHeader('Content-Type', 'application/json')
+                        request.setRequestHeader("X-CSRFToken", '{{ csrf_token }}')
+
+                        request.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                data = JSON.parse(this.responseText)
+                                if (data.saved_successfully) {
+                                    //alert('File autosaved')
+                                    console.log('Server response[send state]: filename:'+data.filename+' fileid:'+data.file_id)
+                                }
+                            }
+                        }
+                        console.log('Client request[send state]: '+info_filename+'  file_id: '+info_fileid)
+                        load = {
+                            new_file: false,
+                            member_id: {{ member.id }},
+                            //file_name: default_filename,
+                            //location: default_location,
+                            file_id: info_fileid,
+
+                            content: editor.getValue()
+                        }
+                        request.send(JSON.stringify(load))
+                    }
+
+
+                    function stop_saving() {
+                        saved = false
+                    }
+
+
+                    xmlhttp.save_by_btn = function() {
+                        info_filename = prompt('Enter filename', default_filename)
+                        info_location = prompt('Enter file location', default_location)
+                        //info_repo = prompt('Enter repo name')
+
+                        var request = new XMLHttpRequest()
+                        request.open(
+                            'POST', '/api/update_state/'+{{ project.id }}+'/', true)
+                        request.setRequestHeader('Content-Type', 'application/json')
+                        request.setRequestHeader("X-CSRFToken", '{{ csrf_token }}')
+
+                        request.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+                                data = JSON.parse(this.responseText)
+                                if (data.saved_successfully) {
+                                    //alert('File saved')
+                                    info_fileid = data.file_id
+                                    saved = true
+                                    default_filename = data.filename
+                                    default_location = data.location
+                                    //console.log('Server response[save by button]: '+data.filename)
+                                    // update fileinfo div
+                                }
+
+                            }
+                        }
+                        //console.log('Client request[save by button]: '+info_filename)
+                        load = {
+                            new_file: true,
+                            member_id: {{ member.id }},
+                            file_name: info_filename,
+
+                            location: info_location,
+                            file_id: info_fileid,
+                            content: editor.getValue()
+                        }
+                        request.send(JSON.stringify(load))
+                    }
+                    var editor_saver = setInterval(xmlhttp.send_state, 1000)
+
+
+
+
+                    function open_file(file_id) {
+                        //alert('open_file called')
+                        saved = true
+                        info_fileid = file_id
+                        var request = new XMLHttpRequest()
+                            request.open(
+                                'POST', '/api/fetch_state/'+{{ project.id }}+'/', true)
+                            request.setRequestHeader('Content-Type', 'application/json')
+                            request.setRequestHeader("X-CSRFToken", '{{ csrf_token }}')
+
+                            request.onreadystatechange = function () {
+                                if (this.readyState == 4 && this.status == 200) {
+                                    data = JSON.parse(this.responseText)
+                                    if (data.fetched_successfully) {
+                                        //alert(data.error)
+                                        //disp = document.getElementById('second_user')
+                                        if (!data.file_found) {
+                                            editor.setValue('Nothing to show')
+                                            return
+                                        }
+                                        editor.setValue(data.state_content)
+                                        default_filename = data.filename
+                                        //alert(default_filename)
+                                        default_location = data.location
+
+                                    }
+                                    else {
+                                        //alert('Not fetched successfully')
+                                        //alert(data.error)
+                                    }
+                                }
+                            }
+                            req = {
+                                file_id: file_id,
+                                currently_working_on: false,
+                                user_id: {{ member.id }},
+
+                            }
+                            request.send(JSON.stringify(req))
+                    }
+
+
+
+
+                </script>
+            </div>
+            <div class="user_info">
+                <!--button id="copy_editor_text" class="editor_meta_btn">Copy Editor Contents</button-->
+                <div id="editor_lang_menu">
+
+                <form  onsubmit="mode_select();">
+                <select name="la" id="lang">
+                    <option value="c_cpp"> C/C++</option>
+                    <option value="python">Python </option>
+                    <option value = "java">Java </option>
+                    <option value ="javascript">JavaScript</option>
+                    <option value = "html">HTML</option>
+                </select>
+                </form>
+                <button onclick="mode_select();" id="b1" class="editor_meta_btn">Select</button>
+                </div>
+                <button id="save_btn" class="editor_meta_btn" onclick="xmlhttp.save_by_btn()">Save</button>
+                <button id="save_btn" class="editor_meta_btn" onclick="stop_saving()">Stop Autosave</button>
+                <div id="fileinfodiv">sdssjksdksjdksd</div>
+
+
+
+                <br />
+                <a href="/">Home</a> &nbsp&nbsp&nbsp <a href="/dashboard/">Dashboard</a>
+                 &nbsp&nbsp&nbsp <a href="/logout/">Log Out</a><br />
+                {{ member.name }} &nbsp&nbsp&nbsp {{ project.name }}
+            </div>
+        </div>
+
+        <div class="notif_board">Will contain the comments and notifications
+
+        </div>
+
+        <div class="main_repo">
+            <table id="repo_table"></table>
+                <script type="text/javascript">
+                function refresh_repo() {
+                    targ = document.getElementById('fileinfodiv')
+                    targ.textContent = default_filename
+                    //alert(default_filename)
+                    text = `
+                    <tr class="headrow">
+                        <td style="width:25%">Directory</td>
+                        <td style="width:25%">Filename</td>
+                        <td style="width:25%">Author</td>
+                        <td style="width:25%">Last changed</td>
+                    </tr>
+                    `
+
+                    var request = new XMLHttpRequest()
+                    request.open('POST', '/api/view_files/'+{{ project.id }}+'/')
+                    request.setRequestHeader('Content-Type', 'application/json')
+                    request.setRequestHeader("X-CSRFToken", '{{ csrf_token }}')
+
+                    request.onreadystatechange = function() {
+                        if (this.readyState == 4 && this.status == 200) {
+                            resp = JSON.parse(this.responseText)
+                            if (!resp.success) {
+                                alert('Failed to obtain files list')
+                                return;
+                            }
+                            files = resp.files
+                            //alert(files)
+                            for (i=0; i<files.length; i++) {
+                                text += '<tr>'
+                                for (j=0; j<4; j++) {
+                                    if (j==1) {
+                                        text += '<td style="width:25%;color:blue;cursor:pointer" onclick="open_file('
+                                        text += files[i][4]
+                                        text += ')" '
+                                        text += 'oncontextmenu="fctx('
+                                        text += files[i][4]
+                                        text += ')"'
+                                        text += '>'
+                                        text += '<u>'
+                                        text += files[i][1]
+                                        text += '</u></td>'
+                                        continue;
+                                    }
+                                    text += '<td style="width:25%">'
+                                    text += files[i][j]
+                                    text += '</td>'
+                                }
+                                text += '</tr>'
+                            }
+                            if (!resp.oldfiles_present) {
+                                var tab = document.querySelector('#repo_table')
+                                tab.innerHTML = text
+                            }
+                            else {
+                                text += `
+                                <tr class="headrow">
+                                    <td style="width:25%">Directory</td>
+                                    <td style="width:25%">Old versions</td>
+                                    <td style="width:25%">Author</td>
+                                    <td style="width:25%">Last changed</td>
+                                </tr>
+                                `
+                                files = resp.oldfiles
+                                for (i=0; i<files.length; i++) {
+                                    text += '<tr>'
+                                    for (j=0; j<4; j++) {
+                                        if (j==1) {
+                                            text += '<td style="width:25%;color:blue;cursor:pointer" onclick="open_file('
+                                            text += files[i][4]
+                                            text += ')">'
+                                            text += '<u>'
+                                            text += files[i][1]
+                                            text += '</u></td>'
+                                            continue;
+                                        }
+                                        text += '<td style="width:25%">'
+                                        text += files[i][j]
+                                        text += '</td>'
+                                    }
+                                    text += '</tr>'
+                                }
+                                var tab = document.querySelector('#repo_table')
+                                tab.innerHTML = text
+                            }
+                        }
+                    }
+
+                    request.send(JSON.stringify({
+                        user_id: {{ member.id }}
+                    }))
+                }
+                setInterval(refresh_repo, 1000)
+
+                </script>
+
+            <script type="text/javascript">
+
+            </script>
+        </div>
+
+        <div class="ide_menu">
+            Will contain editor menu, tab buttons
+
+        </div>
+
+        <div class="second_user">
+            <div class="user_comment_submit">
+                <div id="second_infos">Right click on file in repo to view</div>
+                <button name="submit_comment" onclick="comment_submit()">Send comment</button>
+            </div>
+            <textarea id="second_user"></textarea>
+        </div>
+        <script type="text/javascript">
+        sfid = 0
+        function fctx(file_id) {
+            window.event.preventDefault()
+            sfid = file_id
+
+        }
+
+            var second_user = {}
+            second_user.fetch_state = function() {
+                var request = new XMLHttpRequest()
+                    request.open(
+                        'POST', '/api/fetch_state/'+{{ project.id }}+'/', true)
+                    request.setRequestHeader('Content-Type', 'application/json')
+                    request.setRequestHeader("X-CSRFToken", '{{ csrf_token }}')
+
+                    request.onreadystatechange = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            data = JSON.parse(this.responseText)
+                            if (data.fetched_successfully) {
+                                //alert(data.error)
+                                disp = document.getElementById('second_user')
+                                if (!data.file_found) {
+                                    disp.innerHTML = 'Nothing to show'
+                                    return
+                                }
+                                disp.innerHTML = data.state_content
+                                //document.getElementById('second_infos').textContent = data.owner
+                            }
+                            else {
+                                //alert('Not fetched successfully')
+                                //alert(data.error)
+                            }
+                        }
+                    }
+                    req = {
+                        currently_working_on: false,
+                        file_id: sfid,
+                        user_id: {{ member.id }},
+
+                    }
+                    request.send(JSON.stringify(req))
+            }
+            var second_user_runner = setInterval(second_user.fetch_state, 1000)
+
+        </script>
+        <div class="discussion_board">
+            <div class="disc_channels">
+
+
+                <div style="text-align: center;font-size: 105%;font-weight: bolder;
+                color: black;font-family: helvetica;font-style: oblique;padding-top: 10px;">Channels</div>
+                <ul class="disc_channel_list">
+                    {% for channel in channel_set %}
+                    <li id="channel_{{ channel.id }}" onclick="disc.channel({{ channel.id }})">{{ channel.name }}</li>
+                    {% endfor %}
+                    <a href="/new_channel/{{ project.id }}">New Channel</a>
+                </ul>
+
+
+            </div>
+            <div class="disc_chats_space">
+                <div id="disc_messages"></div>
+
+                <div id="disc_user_input">
+                    <textarea id="disc_user_text" rows=3
+                    onkeydown="if (event.keyCode == 13 && event.shiftKey) {
+                        event.preventDefault()
+                        document.getElementById('disc_send_btn').click()
+                    }"
+                    ></textarea>
+                    <div id="disc_send_message">
+                    <div id="new_msg" style="font-size: 75%;color: green;"></div>
+                    <button id="disc_send_btn" onclick="disc.add_message()">Send</button>
+                    <br /><div style="font-size: 72%;">(Shift+Enter)</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <script type="text/javascript">
+                    disc = {}
+                    current_channel = {{ channel_set.0.id }}
+                    first_cycle = true
+                    all_channels = []
+                    {% for chn in channel_set %}
+                    all_channels.push({{ chn.id }})
+                    {% endfor %}
+                    disc.channel = function(channel_id) {
+                        //mess_div = document.getElementById('disc_messages')
+                        //mess_div.value = this.update_state(channel_id)
+                        current_channel = channel_id
+                        first_cycle = true
+                        for (i=0; i<all_channels.length; i++) {
+                            document.getElementById('channel_'+all_channels[i]).style.backgroundColor = 'darkblue';
+                        }
+                        document.getElementById('channel_'+channel_id).style.backgroundColor = 'black';
+                    }
+
+
+                    disc.update_state = function() {
+                        channel_id = current_channel
+
+                        var request = new XMLHttpRequest()
+                        request.open(
+                            'POST', '/api/update_channel/'+{{ project.id }}+'/', true)
+                        request.setRequestHeader('Content-Type', 'application/json')
+                        request.setRequestHeader("X-CSRFToken", '{{ csrf_token }}')
+
+                        request.onreadystatechange = function () {
+                            if (this.readyState == 4 && this.status == 200) {
+
+                                resp = JSON.parse(this.responseText)
+                                //alert(resp.messages.length)
+                                mess_text = ''
+                                if (!resp.success) {
+                                    return 'Messages failed to load :('
+                                }
+                                for (i=0; i<resp.messages.length; i++) {
+                                    mess = resp.messages[i]
+                                    mess_text += '<div style="font-size:80%;color:gray;">'
+                                    mess_text += mess.sender + '</div>'
+                                    mess_text += mess.content+'<br />'
+                                    mess_text += '<div style="font-size:80%;color:brown;">'
+                                    mess_text += mess.time + '</div><br />'
+                                }
+                                if (document.getElementById('disc_messages').innerHTML != mess_text)
+                                    document.getElementById('new_msg').textContent = ''
+                                else
+                                    document.getElementById('new_msg').textContent = ''
+                                document.getElementById('disc_messages').innerHTML = mess_text
+                                if (first_cycle) {
+                                    var msgdiv = document.getElementById('disc_messages')
+                                    msgdiv.scrollTop = msgdiv.scrollHeight
+                                }
+                                first_cycle = false
+                            }
+
+
+                        }
+                        request.send(
+                            JSON.stringify({channel_id: channel_id})
+                        )
+                    }
+
+
+                    disc.add_message = function() {
+                        first_cycle = true
+                        msg_box = document.getElementById('disc_user_text')
+                        message = msg_box.value
+                        if (message.trim() == '')
+                            return;
+                        msg_box.value = ''
+                        var request = new XMLHttpRequest()
+                        request.open('POST', '/api/add_message/'+{{ project.id }}+'/')
+                        request.setRequestHeader('Content-Type', 'application/json')
+                        request.setRequestHeader("X-CSRFToken", '{{ csrf_token }}')
+
+                        request.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                resp = JSON.parse(this.responseText)
+                                if (!resp.success)
+                                    alert('Failed to send message')
+                                    return;
+                                alert('Message sent')
+                            }
+                        }
+                        request.send(JSON.stringify({
+                            channel_id: current_channel,
+                            user_id: {{ member.id }},
+                            content: message
+                        }))
+                    }
+
+
+                    var runner = setInterval(
+                        disc.update_state, 1000
+                    )
+
+                    disc.btn_click = function(event) {
+                        alert('disc_bnt_click method called')
+                        event.preventDefault()
+                        if (event.keyCode == 13)
+                            document.getElementById('disc_send_btn').click()
+                    }
+                    disc.setup_disc = function(channel_id) {
+                        //document.getElementById('disc_user_text').addEventListener(
+                        //    'keypress', disc.btn_click, false)
+                        document.getElementById('channel_'+channel_id).style.backgroundColor = 'black';
+
+                    }
+                    disc.setup_disc({{ channel_set.0.id }})
+                </script>
+    </body>
+</html>

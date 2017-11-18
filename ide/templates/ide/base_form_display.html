@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title%}{% endblock %}</title>
+    <style type="text/css">
+    .bg {
+            //background-image: url('/static/monet.jpg');
+            height: 100%;
+            background-position: center;
+            background-repeat: repeat-y;
+            background-size: cover;
+        }
+        input {
+            width: 75%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid green;
+            border-radius: 4px;
+        }
+        input[type=submit] {
+            width: 50%;
+            cursor: pointer;
+        }
+        {% block form_style %}
+        .generic_form {
+            position: relative;
+            margin-top: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 30px;
+            width: 400px;
+            padding: 20px;
+            background-color: white;
+
+        }
+        {% endblock %}
+        .user_menu a {
+            display: block;
+            float: right;
+            text-decoration: none;
+            color: white;
+            width: auto;
+            padding: 10px;
+            background-color: green;
+            border: 2px inset white;
+            border-radius: 8px;
+        }
+    {% block style %}{% endblock %}
+    </style>
+</head>
+<body class="bg">
+    {% block user_menu %}
+    <div class="user_menu">
+        <a href="/logout/">Log Out</a>
+        {% block dashboard %}{% endblock %}
+    </div>
+    {% endblock %}
+    {% block pre_form %}{% endblock %}
+    <div class="generic_form">
+        {% block generic_form %}{% endblock %}
+    </div>
+    {% block post_form %}{% endblock %}
+</body>
+</html>

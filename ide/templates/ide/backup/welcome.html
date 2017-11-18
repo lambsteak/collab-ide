@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        * {
+            font-family: sans-serif;
+        }
+    </style>
+    <title>Collaborative IDE: Welcome {{ member.name }}</title>
+</head>
+<body>
+    <form method="POST" action="/new_project/">
+        {% csrf_token %}
+        <h1>Start A Project</h1>
+        <input type="text" name="name" placeholder="Project Name" required /><br />
+        <textarea name="project_members" placeholder="Enter project members" required /></textarea><br />
+        <input type="submit" value="Create">
+    </form>
+    <br /><br />
+    <form action="/join_project/" method="POST">
+        {% csrf_token %}
+        <h1>Join A Project</h1>
+        <input type="text" name="name" placeholder="Enter project name" required /><br />
+        <input type="text" name="token" placeholder="Enter project token" required /> <br />
+        <input type="submit" value="Join">
+    </form>
+</body>
+</html>

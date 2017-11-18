@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>Lambsteak Lab: Log In</title>
+        <style>
+        .bg {
+            //background-image: url('/static/monet.jpg');
+            height: 100%;
+            background-position: center;
+            background-repeat: repeat-y;
+            background-size: cover;
+        }
+        input {
+            width: 75%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            box-sizing: border-box;
+            border: 2px solid green;
+            border-radius: 4px;
+        }
+        input[type=submit] {
+            width: 50%;
+        }
+
+        #guest_form {
+            position: relative;
+            margin-top: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 30px;
+            width: 400px;
+            padding: 20px;
+            background-color: white;
+
+        }
+        </style>
+    </head>
+    <body class='bg'>
+        <div id="guest_form">
+            <h2>Log In</h2>
+            <form action="/login/" method="POST">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Email address" required />
+                <br />
+                <input type="password" name="password" placeholder="Enter password" required />
+                <br />
+                <input type="submit" value="Log In" style="cursor: pointer;">
+            </form>
+            <br />
+            <h2>Sign Up</h2>
+            <form action="/signup/" method="POST">
+                {% csrf_token %}
+                <input type="text" name="name" placeholder="Enter your name" required />
+                <input type="email" name="email" placeholder="Enter your email" required />
+                <br />
+                <input type="text" name="username" placeholder="Enter a username" required />
+                <br />
+                <input type="password" name="password" placeholder="Enter a password" required />
+                <br />
+                <input type="submit" value="Sign Up" style="cursor: pointer;">
+            </form>
+        </div>
+    </body>
+</html>
