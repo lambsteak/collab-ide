@@ -74,7 +74,11 @@ def new_project(member, request):
         admin=member,
         token=request.POST['token']
     )
-    members = request.POST['project_members'].split(';')
+    members = request.POST.get('project_members', False)
+    if members:
+        members = members.split(';')
+    else:
+        members = []
     membs = []
     for memb in members:
         username = memb.strip()
@@ -84,7 +88,8 @@ def new_project(member, request):
             membs.append(SiteUser.objects.get(username=username))
         else:
             return HttpResponse('The given user does not exist')
-    project.users.add(*membs)
+    if membs:
+        project.users.add(*membs)
     # project.users.add(member)
     project.save()
     setup_project(project)
